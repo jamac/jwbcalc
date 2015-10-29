@@ -42,9 +42,9 @@ $(document).ready(function()
 			var base = damage * (attacks + (attacks * (0.2 * (attacks - modifier))));
 			rows = rows + '<tr>\n';
 			rows = rows + '	<td class="attacks">' + attacks + '</td>\n';
-			rows = rows + '	<td class="even">' + Math.floor(base) + '</td>\n';
-			rows = rows + '	<td class="plus50">' + Math.floor(base*1.5) + '</td>\n';
-			rows = rows + '	<td class="less50">' + Math.floor(base*0.5) + '</td>\n';
+			rows = rows + '	<td class="even">' + Math.ceil(base) + '</td>\n';
+			rows = rows + '	<td class="plus50">' + Math.ceil(base*1.5) + '</td>\n';
+			rows = rows + '	<td class="less50">' + Math.ceil(base*0.5) + '</td>\n';
 			rows = rows + '</tr>\n';
 		}
 
