@@ -33,50 +33,36 @@
 		<tbody id="details"></tbody>
 	</table>
 
-<script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
 <script>
-$(document).ready(function()
+window.addEventListener('load', function()
 {
 
-	isNumber = function(val)
+	var damage = document.getElementById('damage');
+	var detailsTable = document.getElementById('details');
+
+	// Calculate attack damage
+	var calcDamage = function(dmg, atk)
+	{
+		var modifier = (atk < 8) ? 1.0 : 0.5;
+		return dmg * (atk + (atk * (0.2 * (atk - modifier))));
+	}
+
+	// Verify input is integer number
+	var isNumber = function(val)
 	{
 		return !isNaN(parseInt(val, 10));
 	}
 
-	// Ignore non-numeric paste data
-	$('#damage').on('paste', function(e)
-	{
-		var paste = (e.originalEvent || e).clipboardData.getData('text/plain');
-		if(paste && !isNumber(paste))
-		{
- 			e.preventDefault();
- 		}
-	});
-
-	// Ignore non-numeric key data
-	$('#damage').on('keypress', function(e)
-	{
- 		if(e.which && e.which > 27 && !isNumber(String.fromCharCode(e.which)))
- 		{
- 			e.preventDefault();
- 		}
-	});
-
-	$('#damage').on('input', function(e)
+	// Build calculation table
+	var applyInput = function(e)
 	{
 		var rows = '';
-		var damage = e.target.value;
-
-		// Ensure damage is numeric
-		if(!isNumber(damage))
-		{
- 			e.preventDefault();
-		}
+		var max = damage.getAttribute('max') || 9999;
+		var input = isNumber(damage.value) ? Math.min(damage.value, max) : 0;
 
 		for(attacks = 1; attacks <= 8; attacks++)
 		{
-			var modifier = (attacks < 8) ? 1.0 : 0.5;
-			var base = damage * (attacks + (attacks * (0.2 * (attacks - modifier))));
+			base = calcDamage(input, attacks);
 			rows = rows + '<tr>\n';
 			rows = rows + '	<td class="attacks">' + attacks + '</td>\n';
 			rows = rows + '	<td class="even">' + Math.ceil(base) + '</td>\n';
@@ -85,11 +71,37 @@ $(document).ready(function()
 			rows = rows + '</tr>\n';
 		}
 
- 		$('#details').html(rows);
+ 		detailsTable.innerHTML = rows;
 
-	});
+	};
 
-	$('#damage').trigger('input');
+	// Ignore non-numeric paste data
+	var filterPaste = function(e)
+	{
+		var paste = (e.originalEvent || e).clipboardData.getData('text/plain');
+		if(!paste || !isNumber(paste))
+		{
+ 			e.preventDefault();
+ 		}
+	}
+
+	// Ignore non-numeric key data
+	var filterKeypress = function(e)
+	{
+		var charCode = e.charCode;
+		if(charCode != 0) {
+			if(charCode < 48 || charCode > 57)
+			{
+				e.preventDefault();
+			}
+		}
+	}
+
+	damage.addEventListener('paste', filterPaste);
+	damage.addEventListener('keypress', filterKeypress)
+	damage.addEventListener('input', applyInput);
+
+	applyInput();
 
 });
 </script>
