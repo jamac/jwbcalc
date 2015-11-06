@@ -1,6 +1,6 @@
-# jwbcalc
-JWB Attack Damage Calculator
-http://jamac.github.io/jwbcalc/
+# jwtgcalc
+JWTG Attack Damage Calculator
+http://jamac.github.io/jwtgcalc/
 
 ## Credits
 Thanks to battlecalculator.com for the original chart that made this possible
